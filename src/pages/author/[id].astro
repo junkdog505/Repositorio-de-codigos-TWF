@@ -2,9 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Search from '../../components/Search';
 import PageHeader from '../../components/ui/PageHeader.astro';
-import Card from '../../components/Card';
+import DynamicSnippetList from '../../components/DynamicSnippetList';
 import { getSnippets, getUsers } from '../../lib/api';
-import { User, Zap } from 'lucide-react';
+import { User } from 'lucide-react';
 
 export async function getStaticPaths() {
   const users = await getUsers();
@@ -44,22 +44,16 @@ const snippets = await getSnippets({ author: user.id, per_page: 100 });
         <div class="text-center md:text-left">
             <h2 class="text-4xl font-black uppercase italic mb-2">{user.nombre}</h2>
             <div class="inline-flex items-center gap-3 px-4 py-1 bg-[#ff3344] text-white text-xs font-black uppercase tracking-widest">
-                <span>{snippets.length}</span> SNIPPETS ACTIVOS
+                COLABORADOR
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {snippets.length > 0 ? (
-        snippets.map((snippet) => (
-          <Card snippet={snippet} client:load />
-        ))
-      ) : (
-        <div class="col-span-full py-32 border-4 border-dashed border-[var(--text-primary)] text-center opacity-30">
-          <Zap size={48} className="mx-auto mb-6" />
-          <p class="text-2xl font-black uppercase tracking-tighter">Sin Despliegues Activos</p>
-        </div>
-      )}
-    </div>
+    <DynamicSnippetList
+      staticSnippets={snippets}
+      apiParams={{ author: user.id }}
+      emptyMessage="Sin Despliegues Activos"
+      client:load
+    />
   </div>
 </Layout>

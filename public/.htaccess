@@ -9,20 +9,33 @@ RewriteEngine On
 RewriteBase /
 
 # --- Dynamic fallback for /codes/[slug] ---
-# If someone visits /codes/some-slug/ and the static file doesn't exist,
-# internally serve the dynamic fallback page instead of a 404.
-# This allows new WordPress posts to be loaded client-side via React.
-
 # Only apply to /codes/SOMETHING (not /codes/ itself, not /codes/index.html)
 RewriteCond %{REQUEST_URI} ^/codes/([^/]+)/?$
-# Exclude the dynamic page itself to avoid infinite loops
 RewriteCond %{REQUEST_URI} !^/codes/dynamic
-# Exclude requests for actual files (CSS, JS, images, etc.)
 RewriteCond %{REQUEST_FILENAME} !-f
-# Exclude requests for actual directories that have an index.html
 RewriteCond %{REQUEST_FILENAME}/index.html !-f
-# Serve the dynamic fallback page (internal rewrite, no redirect)
 RewriteRule ^codes/([^/]+)/?$ /codes/dynamic/index.html [L]
+
+# --- Dynamic fallback for /category/[slug] ---
+RewriteCond %{REQUEST_URI} ^/category/([^/]+)/?$
+RewriteCond %{REQUEST_URI} !^/category/dynamic
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.html !-f
+RewriteRule ^category/([^/]+)/?$ /category/dynamic/index.html [L]
+
+# --- Dynamic fallback for /tag/[slug] ---
+RewriteCond %{REQUEST_URI} ^/tag/([^/]+)/?$
+RewriteCond %{REQUEST_URI} !^/tag/dynamic
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.html !-f
+RewriteRule ^tag/([^/]+)/?$ /tag/dynamic/index.html [L]
+
+# --- Dynamic fallback for /author/[id] ---
+RewriteCond %{REQUEST_URI} ^/author/([^/]+)/?$
+RewriteCond %{REQUEST_URI} !^/author/dynamic
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}/index.html !-f
+RewriteRule ^author/([^/]+)/?$ /author/dynamic/index.html [L]
 
 # --- Standard Astro static site rules ---
 # Serve pre-existing static files directly

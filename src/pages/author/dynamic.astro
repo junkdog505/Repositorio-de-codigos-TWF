@@ -1,0 +1,8 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import DynamicAuthorPage from '../../components/DynamicAuthorPage';
+---
+
+<Layout title="Cargando Autor..." description="Cargando perfil de autor.">
+  <DynamicAuthorPage client:load />
+</Layout>

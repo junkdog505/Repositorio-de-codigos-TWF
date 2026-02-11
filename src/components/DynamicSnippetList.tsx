@@ -6,13 +6,17 @@ import gsap from 'gsap';
 
 interface DynamicSnippetListProps {
   limit?: number;
+  /** Parametros extra para la API (ej: 'snippet-categories=5', 'snippet-tags=3', 'author=1') */
+  apiParams?: Record<string, string | number>;
   /** Snippets pre-renderizados en build time (fallback mientras carga la API) */
   staticSnippets?: WPCodeSnippet[];
+  /** Mensaje personalizado cuando no hay resultados */
+  emptyMessage?: string;
 }
 
 const API_BASE = 'https://code.amsot.net/wp-json/wp/v2';
 
-export default function DynamicSnippetList({ limit, staticSnippets = [] }: DynamicSnippetListProps) {
+export default function DynamicSnippetList({ limit, apiParams = {}, staticSnippets = [], emptyMessage = 'Sin Despliegues Activos' }: DynamicSnippetListProps) {
   const [snippets, setSnippets] = useState<WPCodeSnippet[]>(staticSnippets);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -20,9 +24,15 @@ export default function DynamicSnippetList({ limit, staticSnippets = [] }: Dynam
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    const perPage = limit || 100;
+    const url = new URL(`${API_BASE}/codes`);
+    url.searchParams.set('per_page', String(limit || 100));
 
-    fetch(`${API_BASE}/codes?per_page=${perPage}`)
+    // Agregar parametros extra (filtros)
+    Object.entries(apiParams).forEach(([key, value]) => {
+      url.searchParams.set(key, String(value));
+    });
+
+    fetch(url.toString())
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch');
         return res.json();
@@ -32,11 +42,10 @@ export default function DynamicSnippetList({ limit, staticSnippets = [] }: Dynam
         setLoading(false);
       })
       .catch(() => {
-        // Si falla la API, mantenemos los staticSnippets
         setError(true);
         setLoading(false);
       });
-  }, [limit]);
+  }, [limit, JSON.stringify(apiParams)]);
 
   useEffect(() => {
     if (!loading && !hasAnimated.current && gridRef.current && gridRef.current.children.length > 0) {
@@ -72,7 +81,7 @@ export default function DynamicSnippetList({ limit, staticSnippets = [] }: Dynam
     return (
       <div className="col-span-full py-32 border-4 border-dashed border-[var(--text-primary)] text-center opacity-30">
         <Zap size={48} className="mx-auto mb-6" />
-        <p className="text-2xl font-black uppercase tracking-tighter">Sin Despliegues Activos</p>
+        <p className="text-2xl font-black uppercase tracking-tighter">{emptyMessage}</p>
       </div>
     );
   }
