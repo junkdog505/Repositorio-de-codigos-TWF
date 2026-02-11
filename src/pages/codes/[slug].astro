@@ -11,13 +11,16 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import type { WPCodeSnippet } from '../../types/wp';
 
-const { slug } = Astro.params;
-if (!slug) return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const snippets = await getSnippets({ per_page: 100 });
+  return snippets.map((snippet) => ({
+    params: { slug: snippet.slug },
+    props: { snippet },
+  }));
+}
 
-const snippet = await getSnippetBySlug(slug);
-if (!snippet) return Astro.redirect('/404');
-
-const { title, date, acf, datos_autor, nombres_categorias, nombres_tags } = snippet;
+const { snippet } = Astro.props;
+const { title, date, acf, datos_autor, nombres_categorias, nombres_tags, slug } = snippet;
 const formattedDate = format(new Date(date), "dd.MM.yyyy", { locale: es });
 const currentUrl = `https://code.amsot.net/codes/${slug}`;
 
@@ -51,8 +54,8 @@ if (categoryIds.length > 0) {
 
         <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] mb-10 italic tracking-tighter" set:html={title.rendered} />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pt-8 border-t border-[var(--text-primary)]">
-          <p class="text-xl md:text-2xl font-bold text-[var(--text-primary)] leading-tight">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pt-8 border-t border-[var(--border-color)]">
+          <p class="text-xl md:text-2xl font-black uppercase tracking-tight text-[var(--text-primary)] leading-tight">
             {acf.extracto_corto}
           </p>
           <div class="flex flex-wrap gap-8 items-center md:justify-end">

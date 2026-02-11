@@ -6,13 +6,15 @@ import Card from '../../components/Card';
 import { getSnippets, getUsers } from '../../lib/api';
 import { User, Zap } from 'lucide-react';
 
-const { id } = Astro.params;
-if (!id) return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const users = await getUsers();
+  return users.map((user) => ({
+    params: { id: user.id.toString() },
+    props: { user },
+  }));
+}
 
-const users = await getUsers();
-const user = users.find(u => u.id.toString() === id);
-if (!user) return Astro.redirect('/404');
-
+const { user } = Astro.props;
 const snippets = await getSnippets({ author: user.id, per_page: 100 });
 ---
 

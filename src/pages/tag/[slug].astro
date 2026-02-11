@@ -4,13 +4,15 @@ import Card from '../../components/Card';
 import { getSnippets, getTags } from '../../lib/api';
 import { Hash, Zap } from 'lucide-react';
 
-const { slug } = Astro.params;
-if (!slug) return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const tags = await getTags();
+  return tags.map((tag) => ({
+    params: { slug: tag.slug },
+    props: { tag },
+  }));
+}
 
-const tags = await getTags();
-const tag = tags.find(t => t.slug === slug);
-if (!tag) return Astro.redirect('/404');
-
+const { tag } = Astro.props;
 const tagId = (tag as any).id || (tag as any).term_id;
 
 const snippets = await getSnippets({ 
