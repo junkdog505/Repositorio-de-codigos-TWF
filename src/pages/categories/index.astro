@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Search from '../../components/Search';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import { getCategories } from '../../lib/api';
+import { Folder } from 'lucide-react';
+
+const categories = await getCategories();
+---
+
+<Layout title="Categorías" description="Explora todos los temas de nuestra biblioteca técnica.">
+  
+  <PageHeader 
+    title="Categorías" 
+    subtitle="Estructura técnica organizada por arquitectura y lenguaje central."
+    label="SISTEMA / NODOS"
+    icon={Folder}
+  >
+    <Search client:load />
+  </PageHeader>
+
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      {categories.map((cat) => (
+        <a href={`/category/${cat.slug}`} class="group flex flex-col p-8 bg-[var(--bg-secondary)] border-2 border-[var(--text-primary)] hover:bg-[var(--bg-primary)] hover:shadow-[8px_8px_0px_0px_#ff3344] transition-all duration-300">
+          <div class="flex items-center justify-between mb-8">
+            <span class="text-[10px] font-black font-mono">POSTS: {cat.count}</span>
+            <div class="w-2 h-2 bg-[#ff3344]"></div>
+          </div>
+          <h2 class="text-2xl font-black uppercase leading-[0.9] group-hover:text-[#ff3344] transition-colors mb-4">
+            {cat.name}
+          </h2>
+          <div class="mt-auto text-[9px] font-black uppercase tracking-widest opacity-40 group-hover:opacity-100 group-hover:text-[#ff3344] transition-all">
+            ACCEDER →
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>

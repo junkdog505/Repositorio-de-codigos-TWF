@@ -1,0 +1,125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
+import Badge from '../../components/ui/Badge';
+import ProgressBar from '../../components/ui/ProgressBar';
+import ShareButtons from '../../components/ui/ShareButtons';
+import Card from '../../components/Card';
+import { getSnippetBySlug, getSnippets } from '../../lib/api';
+import { Calendar, ArrowLeft, Zap } from 'lucide-react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import type { WPCodeSnippet } from '../../types/wp';
+
+const { slug } = Astro.params;
+if (!slug) return Astro.redirect('/404');
+
+const snippet = await getSnippetBySlug(slug);
+if (!snippet) return Astro.redirect('/404');
+
+const { title, date, acf, datos_autor, nombres_categorias, nombres_tags } = snippet;
+const formattedDate = format(new Date(date), "dd.MM.yyyy", { locale: es });
+const currentUrl = `https://code.amsot.net/codes/${slug}`;
+
+const categoryIds = nombres_categorias?.map((c: any) => c.id || c.term_id) || [];
+let relatedSnippets: WPCodeSnippet[] = [];
+if (categoryIds.length > 0) {
+  relatedSnippets = await getSnippets({ 
+    'snippet-categories': categoryIds as any,
+    per_page: 4,
+    exclude: [snippet.id] as any
+  });
+}
+---
+
+<Layout title={title.rendered}>
+  <ProgressBar client:load />
+
+  <article class="min-h-screen pt-20">
+    <div class="border-b-2 border-[var(--text-primary)] bg-[var(--bg-secondary)]">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20">
+        <a href="/codes" class="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff3344] mb-8 hover:translate-x-[-4px] transition-transform">
+          <ArrowLeft size={14} /> ARCHIVO
+        </a>
+
+        <div class="flex flex-wrap items-center gap-6 mb-8">
+          <Badge difficulty={acf.dificultad} />
+          <span class="text-xs font-black uppercase tracking-widest opacity-60 flex items-center gap-2">
+             <Calendar size={14} /> {formattedDate}
+          </span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] mb-10 italic tracking-tighter" set:html={title.rendered} />
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 pt-8 border-t border-[var(--text-primary)]">
+          <p class="text-xl md:text-2xl font-bold text-[var(--text-primary)] leading-tight">
+            {acf.extracto_corto}
+          </p>
+          <div class="flex flex-wrap gap-8 items-center md:justify-end">
+             {datos_autor && (
+               <div class="flex flex-col">
+                 <span class="text-[9px] font-black uppercase tracking-widest text-[#ff3344] mb-1">AUTOR</span>
+                 <a href={`/author/${datos_autor.id}`} class="text-sm font-black uppercase hover:text-[#ff3344] transition-colors">{datos_autor.nombre}</a>
+               </div>
+             )}
+             {nombres_categorias?.[0] && (
+               <div class="flex flex-col">
+                 <span class="text-[9px] font-black uppercase tracking-widest text-[#ff3344] mb-1">CATEGORÍA</span>
+                 <a href={`/category/${nombres_categorias[0].slug}`} class="text-sm font-black uppercase hover:underline">
+                   {nombres_categorias[0].name}
+                 </a>
+               </div>
+             )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+      <div class="lg:col-span-8">
+        <div class="prose prose-xl dark:prose-invert max-w-none 
+              prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:italic prose-headings:text-[var(--text-primary)]
+              prose-p:text-lg md:text-xl prose-p:font-medium prose-p:text-[var(--text-primary)] prose-p:leading-relaxed
+              prose-a:text-[#ff3344] prose-a:font-black prose-a:no-underline hover:prose-a:underline
+              prose-blockquote:border-l-8 prose-blockquote:border-[#ff3344] prose-blockquote:bg-[var(--bg-secondary)] prose-blockquote:font-bold prose-blockquote:uppercase prose-blockquote:rounded-none prose-blockquote:text-[var(--text-primary)]
+              prose-strong:text-[var(--text-primary)] prose-strong:font-black
+              prose-li:text-[var(--text-primary)] prose-li:font-medium prose-li:leading-relaxed
+              ">
+           <BlockRenderer blocks={acf.contenido_snippet} />
+        </div>
+
+        {relatedSnippets.length > 0 && (
+          <div class="mt-24 pt-16 border-t-4 border-[var(--text-primary)]">
+            <div class="flex items-center gap-4 mb-10">
+               <Zap size={32} className="text-[#ff3344]" />
+               <h2 class="text-3xl md:text-4xl font-black uppercase italic tracking-tighter text-[var(--text-primary)]">Relacionados</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+               {relatedSnippets.map(s => <Card snippet={s} client:load />)}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <aside class="lg:col-span-4 space-y-10">
+        <div class="sticky top-32 space-y-10">
+          <div class="p-8 border-4 border-[var(--text-primary)] bg-[var(--bg-secondary)] shadow-[8px_8px_0px_0px_#ff3344]">
+            <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff3344] mb-6">ETIQUETAS</h3>
+            <div class="flex flex-wrap gap-2">
+              {nombres_tags?.map((tag) => (
+                <a href={`/tag/${tag.slug}`} class="text-[10px] font-black uppercase px-3 py-1.5 border-2 border-[var(--text-primary)] hover:bg-[#ff3344] hover:text-white transition-all">
+                  #{tag.name}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div class="p-8 border-4 border-[var(--text-primary)] bg-[var(--bg-primary)]">
+             <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff3344] mb-6">COMPARTIR</h3>
+             <ShareButtons client:visible title={title.rendered} url={currentUrl} />
+          </div>
+        </div>
+      </aside>
+    </div>
+  </article>
+</Layout>

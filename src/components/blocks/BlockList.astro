@@ -1,0 +1,20 @@
+---
+import type { BlockList as BlockListType } from '../../types/wp';
+import { Zap } from 'lucide-react';
+
+interface Props {
+  block: BlockListType;
+}
+
+const { block } = Astro.props;
+const { items_lista } = block;
+---
+
+<ul class="space-y-4 my-10">
+  {items_lista?.map((itemObj) => (
+    <li class="flex items-center gap-4 text-[var(--text-primary)] font-bold text-xl">
+      <Zap className="w-6 h-6 text-[#ff3344] flex-shrink-0" />
+      <span>{itemObj.item}</span>
+    </li>
+  ))}
+</ul>

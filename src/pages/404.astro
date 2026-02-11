@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { FileQuestion, Home, ArrowLeft } from 'lucide-react';
+---
+
+<Layout title="404 - Error del Sistema">
+  <div class="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-[var(--bg-secondary)]">
+    <div class="p-10 border-4 border-[var(--text-primary)] bg-[var(--bg-primary)] mb-12 shadow-[12px_12px_0px_0px_rgba(255,51,68,1)] rotate-3">
+        <FileQuestion size={64} className="text-[#ff3344]" />
+    </div>
+    
+    <h1 class="text-8xl md:text-[12rem] font-black uppercase italic leading-none tracking-tighter mb-8">
+      404<span class="text-[#ff3344] not-italic">!</span>
+    </h1>
+    
+    <div class="max-w-2xl border-t-4 border-[var(--text-primary)] pt-8">
+        <p class="text-2xl font-black uppercase tracking-tight mb-12">
+            Ruta no encontrada. La dirección solicitada no existe en nuestro repositorio técnico.
+        </p>
+        
+        <a 
+          href="/" 
+          class="inline-flex items-center gap-4 px-10 py-5 border-2 border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] font-black uppercase tracking-widest hover:bg-[#ff3344] transition-all hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)]"
+        >
+          <ArrowLeft size={20} />
+          Reiniciar Conexión
+        </a>
+    </div>
+  </div>
+</Layout>

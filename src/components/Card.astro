@@ -1,0 +1,12 @@
+---
+import CardReact from './Card';
+import type { WPCodeSnippet } from '../types/wp';
+
+interface Props {
+  snippet: WPCodeSnippet;
+}
+
+const { snippet } = Astro.props;
+---
+
+<CardReact snippet={snippet} client:visible />

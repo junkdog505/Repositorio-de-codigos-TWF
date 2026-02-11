@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Search from '../../components/Search';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import Card from '../../components/Card';
+import { getSnippets, getUsers } from '../../lib/api';
+import { User, Zap } from 'lucide-react';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/404');
+
+const users = await getUsers();
+const user = users.find(u => u.id.toString() === id);
+if (!user) return Astro.redirect('/404');
+
+const snippets = await getSnippets({ author: user.id, per_page: 100 });
+---
+
+<Layout title={`Autor: ${user.nombre}`}>
+  
+  <PageHeader 
+    title="Autor" 
+    subtitle={`Desplegando soluciones técnicas y snippets publicados por ${user.nombre}.`}
+    label="SISTEMA / COLABORADOR"
+    icon={User}
+  >
+    <Search client:load />
+  </PageHeader>
+
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    
+    <div class="flex flex-col md:flex-row items-center gap-8 mb-20 p-8 border-4 border-black dark:border-white bg-[var(--bg-secondary)] shadow-[12px_12px_0px_0px_#ff3344]">
+        <div class="relative shrink-0">
+            {user.avatar ? (
+                <img src={user.avatar} alt={user.nombre} class="w-32 h-32 border-4 border-[var(--text-primary)] grayscale" />
+            ) : (
+                <div class="w-32 h-32 bg-[var(--bg-primary)] border-4 border-[var(--text-primary)] flex items-center justify-center">
+                    <User className="w-16 h-16 text-[#ff3344]" />
+                </div>
+            )}
+        </div>
+        <div class="text-center md:text-left">
+            <h2 class="text-4xl font-black uppercase italic mb-2">{user.nombre}</h2>
+            <div class="inline-flex items-center gap-3 px-4 py-1 bg-[#ff3344] text-white text-xs font-black uppercase tracking-widest">
+                <span>{snippets.length}</span> SNIPPETS ACTIVOS
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {snippets.length > 0 ? (
+        snippets.map((snippet) => (
+          <Card snippet={snippet} client:load />
+        ))
+      ) : (
+        <div class="col-span-full py-32 border-4 border-dashed border-[var(--text-primary)] text-center opacity-30">
+          <Zap size={48} className="mx-auto mb-6" />
+          <p class="text-2xl font-black uppercase tracking-tighter">Sin Despliegues Activos</p>
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>

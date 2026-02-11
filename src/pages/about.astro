@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Github, Twitter, Linkedin, Mail, Globe } from 'lucide-react';
+
+const socialLinks = [
+  { icon: Globe, href: 'https://thewebfactory.us', label: 'Website' },
+  { icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: Mail, href: 'mailto:contact@thewebfactory.us', label: 'Email' },
+];
+---
+
+<Layout title="Nosotros" description="La historia detrás de TWF.code.">
+  <section class="py-24 px-4 bg-gradient-to-b from-[var(--bg-secondary)] to-[var(--bg-primary)] border-b-2 border-[var(--text-primary)]">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-7xl md:text-9xl font-black uppercase italic leading-[0.85] tracking-tighter mb-12">
+        We Build <br/> <span class="text-[#ff3344] not-italic">The Web.</span>
+      </h1>
+      <p class="text-3xl font-black uppercase tracking-tight text-[var(--text-primary)] max-w-4xl leading-none border-l-8 border-[#ff3344] pl-8">
+        TWF.code es la extensión técnica de THE WEB FACTORY. Un laboratorio de conocimiento abierto.
+      </p>
+    </div>
+  </section>
+
+  <div class="max-w-7xl mx-auto px-4 py-24 grid grid-cols-1 lg:grid-cols-12 gap-20">
+    <div class="lg:col-span-8 space-y-16">
+      <div class="prose prose-2xl dark:prose-invert max-w-none prose-p:font-bold prose-p:uppercase prose-p:tracking-tight prose-p:text-[var(--text-secondary)]">
+        <p>
+          Creemos que el código de calidad no debe ser un secreto. Nuestra misión es documentar y compartir las soluciones que implementamos diariamente en proyectos de escala global.
+        </p>
+        <p>
+          Desde optimizaciones profundas en WordPress hasta arquitecturas reactivas en Astro, aquí encontrarás el ADN de nuestro flujo de trabajo.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-16 border-t-2 border-[var(--text-primary)]">
+         <div>
+            <h3 class="text-xs font-black uppercase tracking-[0.3em] text-[#ff3344] mb-4">Filosofía</h3>
+            <p class="font-bold uppercase text-sm leading-relaxed">Simplicidad técnica. Rendimiento extremo. Estética brutalista.</p>
+         </div>
+         <div>
+            <h3 class="text-xs font-black uppercase tracking-[0.3em] text-[#ff3344] mb-4">Ubicación</h3>
+            <p class="font-bold uppercase text-sm leading-relaxed">Laboratorio Digital / Remoto / Global.</p>
+         </div>
+      </div>
+    </div>
+
+    <aside class="lg:col-span-4">
+      <div class="sticky top-32 space-y-8">
+        <div class="p-10 border-4 border-[var(--text-primary)] bg-[var(--bg-secondary)] shadow-[12px_12px_0px_0px_rgba(255,51,68,1)]">
+          <h3 class="text-xl font-black uppercase italic mb-8">Conexión <br/> Técnica</h3>
+          <div class="space-y-4">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a href={href} class="flex items-center justify-between p-4 border-2 border-[var(--text-primary)] hover:bg-[#ff3344] hover:text-white transition-all group">
+                <span class="text-xs font-black uppercase tracking-widest">{label}</span>
+                <Icon size={18} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</Layout>

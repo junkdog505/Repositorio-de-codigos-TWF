@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchComponent from '../components/Search';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { Search as SearchIcon } from 'lucide-react';
+---
+
+<Layout title="Búsqueda" description="Encuentra el snippet exacto que necesitas.">
+  
+  <PageHeader 
+    title="Búsqueda Global" 
+    subtitle="Acceso directo a la base de conocimientos técnica del repositorio."
+    label="SISTEMA / BUSCAR"
+    icon={SearchIcon}
+  >
+    <SearchComponent client:load />
+  </PageHeader>
+
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      <div class="p-8 border-2 border-[var(--text-primary)] bg-[var(--bg-secondary)]">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff3344] mb-4">MÉTODO</h3>
+        <p class="text-xs font-bold leading-tight">Usa términos técnicos precisos para resultados óptimos.</p>
+      </div>
+
+      <div class="p-8 border-2 border-[var(--text-primary)] bg-[var(--bg-secondary)]">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff3344] mb-4">FLUJO</h3>
+        <p class="text-xs font-bold leading-tight">Si no encuentras el código, usa el índice de nodos.</p>
+      </div>
+
+      <div class="p-8 border-2 border-[var(--text-primary)] bg-[var(--bg-secondary)]">
+        <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-[#ff3344] mb-4">ESTADO</h3>
+        <p class="text-xs font-bold leading-tight">Sincronización en tiempo real con el núcleo.</p>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,60 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import Header from '../components/Header';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Snippets de alto rendimiento para desarrolladores." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title} | TWF.code</title>
+    
+    <ViewTransitions />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script is:inline>
+      (function() {
+        const applyTheme = () => {
+          const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        };
+
+        applyTheme();
+        document.addEventListener('astro:after-swap', applyTheme);
+      })();
+    </script>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <Header client:load />
+    <main class="flex-grow w-full">
+      <slot />
+    </main>
+    <footer class="border-t border-[var(--border-color)] py-16 bg-[var(--bg-primary)]">
+      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+        <span class="font-black text-2xl tracking-tighter uppercase">TWF<span class="text-[#ff3344]">.</span>CODE</span>
+        <div class="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-widest">
+          &copy; {new Date().getFullYear()} THE WEB FACTORY. ALL RIGHTS RESERVED.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

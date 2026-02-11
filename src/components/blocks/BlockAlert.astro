@@ -1,0 +1,38 @@
+---
+import type { BlockAlert as BlockAlertType } from '../../types/wp';
+import { Info, AlertTriangle, Lightbulb } from 'lucide-react';
+
+interface Props {
+  block: BlockAlertType;
+}
+
+const { block } = Astro.props;
+const { contenido_alerta, tipo_alerta } = block;
+
+const styles = {
+  info: "bg-white text-black border-black dark:bg-black dark:text-white dark:border-white shadow-[4px_4px_0px_0px_#3b82f6]",
+  warning: "bg-white text-black border-black dark:bg-black dark:text-white dark:border-white shadow-[4px_4px_0px_0px_#eab308]",
+  tip: "bg-white text-black border-black dark:bg-black dark:text-white dark:border-white shadow-[4px_4px_0px_0px_#22c55e]",
+};
+
+const colors = {
+    info: "text-blue-500",
+    warning: "text-yellow-500",
+    tip: "text-green-500",
+};
+
+const Icon = {
+  info: Info,
+  warning: AlertTriangle,
+  tip: Lightbulb,
+}[tipo_alerta];
+---
+
+<div class={`my-10 p-6 border-4 flex gap-4 ${styles[tipo_alerta]}`}>
+  <div class={`flex-shrink-0 mt-1 ${colors[tipo_alerta]}`}>
+    <Icon className="w-6 h-6" />
+  </div>
+  <div class="text-lg font-bold leading-snug prose prose-sm max-w-none dark:prose-invert">
+    <Fragment set:html={contenido_alerta} />
+  </div>
+</div>

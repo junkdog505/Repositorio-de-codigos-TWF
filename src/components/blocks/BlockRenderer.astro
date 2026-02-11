@@ -1,0 +1,36 @@
+---
+import type { FlexibleContentBlock } from '../../types/wp';
+import BlockText from './BlockText.astro';
+import BlockCode from './BlockCode.astro';
+import BlockAlert from './BlockAlert.astro';
+import BlockImage from './BlockImage.astro';
+import BlockList from './BlockList.astro';
+import BlockSeparator from './BlockSeparator.astro';
+
+interface Props {
+  blocks: FlexibleContentBlock[];
+}
+
+const { blocks } = Astro.props;
+---
+
+<div class="space-y-12">
+  {blocks?.map((block) => {
+    switch (block.acf_fc_layout) {
+      case 'bloque_texto':
+        return <BlockText block={block} />;
+      case 'bloque_codigo':
+        return <BlockCode block={block} />;
+      case 'bloque_alerta':
+        return <BlockAlert block={block} />;
+      case 'bloque_imagen':
+        return <BlockImage block={block} />;
+      case 'bloque_lista':
+        return <BlockList block={block} />;
+      case 'bloque_separador':
+        return <BlockSeparator block={block} />;
+      default:
+        return null;
+    }
+  })}
+</div>

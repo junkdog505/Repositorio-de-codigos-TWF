@@ -1,0 +1,62 @@
+---
+import { Code } from 'astro:components';
+import type { BlockCode as BlockCodeType } from '../../types/wp';
+
+interface Props {
+  block: BlockCodeType;
+}
+
+const { block } = Astro.props;
+const { codigo, lenguaje } = block;
+
+const langMap: Record<string, any> = {
+  php: 'php',
+  css: 'css',
+  javascript: 'javascript',
+  js: 'javascript',
+  html: 'html',
+  sql: 'sql',
+  xml: 'xml',
+  htaccess: 'apache',
+  json: 'json',
+  bash: 'bash'
+};
+
+const validLang = langMap[lenguaje] || 'text';
+---
+
+<div class="group relative my-12 border-2 border-[var(--text-primary)] bg-[#0d1117] shadow-[8px_8px_0px_0px_rgba(255,51,68,1)]">
+  <div class="flex items-center justify-between px-4 py-2 border-b-2 border-[var(--text-primary)] bg-white/5">
+    <div class="flex items-center gap-2">
+      <div class="w-2 h-2 rounded-full bg-[#ff3344]"></div>
+      <span class="text-[10px] font-black font-mono tracking-widest text-white/60 uppercase">{lenguaje}</span>
+    </div>
+    
+    <button 
+      class="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-[#ff3344] transition-colors"
+      onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText).then(() => {
+        const o = this.innerText; this.innerText = 'COPIADO'; setTimeout(() => this.innerText = o, 2000);
+      })"
+    >
+      COPIAR
+    </button>
+  </div>
+
+  <div class="p-6 text-[15px] leading-relaxed font-mono overflow-x-auto selection:bg-[#ff3344] selection:text-white">
+    <Code code={codigo} lang={validLang} theme="github-dark" />
+  </div>
+</div>
+
+<style is:global>
+  pre {
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  code {
+    background-color: transparent !important;
+  }
+  .dark pre span {
+    text-shadow: none !important;
+  }
+</style>

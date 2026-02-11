@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Archivo', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-brand: #ff3344;
+  --color-brand-dark: #e62e3d;
+}
+
+@layer base {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+    --text-primary: #000000;
+    --text-secondary: #222222;
+    --border-color: #000000;
+    --accent: #ff3344;
+  }
+
+  .dark {
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --border-color: #ffffff;
+    --accent: #ff3344;
+  }
+
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased font-sans transition-colors duration-200;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-black tracking-tight leading-[1.1] font-display;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  ::selection {
+    @apply bg-[#ff3344] text-white;
+  }
+}
+
+@layer utilities {
+  .brutalist-border {
+    @apply border-2 border-[var(--text-primary)];
+  }
+  
+  .brutalist-shadow {
+    @apply shadow-[4px_4px_0px_0px_#ff3344];
+  }
+
+  .brutalist-shadow-lg {
+    @apply shadow-[8px_8px_0px_0px_#ff3344];
+  }
+}

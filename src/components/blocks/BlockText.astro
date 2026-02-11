@@ -1,0 +1,13 @@
+---
+import type { BlockText as BlockTextType } from '../../types/wp';
+
+interface Props {
+  block: BlockTextType;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="prose prose-lg dark:prose-invert max-w-none my-8 text-[var(--text-primary)] leading-relaxed">
+  <Fragment set:html={block.texto} />
+</div>

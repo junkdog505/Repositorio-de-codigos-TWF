@@ -1,0 +1,29 @@
+---
+import type { BlockImage as BlockImageType } from '../../types/wp';
+import LightboxImage from '../ui/LightboxImage';
+
+interface Props {
+  block: BlockImageType;
+}
+
+const { block } = Astro.props;
+const { imagen, caption } = block;
+
+const imageUrl = imagen?.sizes?.large || imagen?.url;
+const altText = imagen?.alt || caption || 'Snippet Image';
+---
+
+{imageUrl && (
+  <div class="my-16">
+    <LightboxImage 
+      src={imageUrl} 
+      alt={altText} 
+      client:load 
+    />
+    {caption && (
+      <p class="mt-6 text-xs font-black uppercase tracking-[0.3em] text-center text-[var(--text-primary)] bg-[var(--bg-secondary)] py-2 border-x-2 border-b-2 border-black dark:border-white">
+        {caption}
+      </p>
+    )}
+  </div>
+)}
