@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card';
+import DynamicSnippetList from '../components/DynamicSnippetList';
 import Search from '../components/Search';
 import PageHeader from '../components/ui/PageHeader.astro';
 import { getSnippets } from '../lib/api';
@@ -31,11 +31,7 @@ const latestSnippets = await getSnippets({ per_page: 6 });
         </a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-        {latestSnippets.map((snippet) => (
-          <Card snippet={snippet} client:load />
-        ))}
-      </div>
+      <DynamicSnippetList limit={6} staticSnippets={latestSnippets} client:load />
     </div>
   </section>
 </Layout>

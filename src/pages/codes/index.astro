@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Search from '../../components/Search';
 import PageHeader from '../../components/ui/PageHeader.astro';
-import Card from '../../components/Card';
+import DynamicSnippetList from '../../components/DynamicSnippetList';
 import { getSnippets } from '../../lib/api';
 import { Code2 } from 'lucide-react';
 
@@ -21,10 +21,6 @@ const snippets = await getSnippets({ per_page: 100 });
   </PageHeader>
 
   <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-      {snippets.map((snippet) => (
-        <Card snippet={snippet} client:load />
-      ))}
-    </div>
+    <DynamicSnippetList staticSnippets={snippets} client:load />
   </div>
 </Layout>

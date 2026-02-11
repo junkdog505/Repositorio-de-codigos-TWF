@@ -1,0 +1,8 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import DynamicSnippetPage from '../../components/DynamicSnippetPage';
+---
+
+<Layout title="Cargando..." description="Cargando snippet desde el repositorio de codigo.">
+  <DynamicSnippetPage client:load />
+</Layout>
